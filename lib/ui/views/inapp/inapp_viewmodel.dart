@@ -13,11 +13,11 @@ import '../../../app/app.locator.dart';
 import '../../../app/app.logger.dart';
 // import '../../setup_snackbar_ui.dart';
 
-class HomeViewModel extends BaseViewModel {
-  final log = getLogger('HomeViewModel');
+class InAppViewModel extends BaseViewModel {
+  final log = getLogger('InAppViewModel');
 
   final _snackBarService = locator<SnackbarService>();
-  final _navigationService = locator<NavigationService>();
+  // final _navigationService = locator<NavigationService>();
 
   final ImagePicker _picker = ImagePicker();
   XFile? _imageFile;

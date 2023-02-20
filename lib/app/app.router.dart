@@ -7,8 +7,10 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i4;
+import 'package:stacked_services/stacked_services.dart' as _i6;
+import 'package:vision/ui/views/hardware/hardware_view.dart' as _i5;
 import 'package:vision/ui/views/home/home_view.dart' as _i3;
+import 'package:vision/ui/views/inapp/inapp_view.dart' as _i4;
 import 'package:vision/ui/views/startup/startup_view.dart' as _i2;
 
 class Routes {
@@ -16,9 +18,15 @@ class Routes {
 
   static const homeView = '/home';
 
+  static const inAppView = '/inapp';
+
+  static const hardwareView = '/hardware';
+
   static const all = <String>{
     startupView,
     homeView,
+    inAppView,
+    hardwareView,
   };
 }
 
@@ -31,6 +39,14 @@ class StackedRouter extends _i1.RouterBase {
     _i1.RouteDef(
       Routes.homeView,
       page: _i3.HomeView,
+    ),
+    _i1.RouteDef(
+      Routes.inAppView,
+      page: _i4.InAppView,
+    ),
+    _i1.RouteDef(
+      Routes.hardwareView,
+      page: _i5.HardwareView,
     ),
   ];
 
@@ -47,6 +63,18 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
+    _i4.InAppView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => const _i4.InAppView(),
+        settings: data,
+      );
+    },
+    _i5.HardwareView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => const _i5.HardwareView(),
+        settings: data,
+      );
+    },
   };
 
   @override
@@ -55,7 +83,7 @@ class StackedRouter extends _i1.RouterBase {
   Map<Type, _i1.StackedRouteFactory> get pagesMap => _pagesMap;
 }
 
-extension NavigatorStateExtension on _i4.NavigationService {
+extension NavigatorStateExtension on _i6.NavigationService {
   Future<dynamic> navigateToStartupView([
     int? routerId,
     bool preventDuplicates = true,
@@ -84,6 +112,34 @@ extension NavigatorStateExtension on _i4.NavigationService {
         transition: transition);
   }
 
+  Future<dynamic> navigateToInAppView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.inAppView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToHardwareView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.hardwareView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
   Future<dynamic> replaceWithStartupView([
     int? routerId,
     bool preventDuplicates = true,
@@ -106,6 +162,34 @@ extension NavigatorStateExtension on _i4.NavigationService {
         transition,
   ]) async {
     return replaceWith<dynamic>(Routes.homeView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithInAppView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.inAppView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithHardwareView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.hardwareView,
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

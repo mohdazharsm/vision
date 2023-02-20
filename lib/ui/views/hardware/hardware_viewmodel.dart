@@ -12,9 +12,10 @@ import 'package:vision/ui/setup_snackbar_ui.dart';
 import '../../../app/app.locator.dart';
 import '../../../app/app.logger.dart';
 // import '../../setup_snackbar_ui.dart';
+import 'package:screen_capture_event/screen_capture_event.dart';
 
-class HomeViewModel extends BaseViewModel {
-  final log = getLogger('HomeViewModel');
+class HardwareViewModel extends BaseViewModel {
+  final log = getLogger('HardwareViewModel');
 
   final _snackBarService = locator<SnackbarService>();
   // final _navigationService = locator<NavigationService>();

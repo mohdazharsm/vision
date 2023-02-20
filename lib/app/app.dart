@@ -1,5 +1,7 @@
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:vision/ui/views/hardware/hardware_view.dart';
+import 'package:vision/ui/views/inapp/inapp_view.dart';
 
 import '../ui/views/home/home_view.dart';
 import '../ui/views/startup/startup_view.dart';
@@ -8,6 +10,8 @@ import '../ui/views/startup/startup_view.dart';
   routes: [
     MaterialRoute(page: StartupView, initial: true),
     MaterialRoute(page: HomeView, path: '/home'),
+    MaterialRoute(page: InAppView, path: '/inapp'),
+    MaterialRoute(page: HardwareView, path: '/hardware'),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),

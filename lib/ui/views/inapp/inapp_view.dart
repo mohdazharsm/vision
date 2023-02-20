@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-import 'home_viewmodel.dart';
+import 'inapp_viewmodel.dart';
 
-class HomeView extends StatelessWidget {
-  const HomeView({Key? key}) : super(key: key);
+class InAppView extends StatelessWidget {
+  const InAppView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<HomeViewModel>.reactive(
+    return ViewModelBuilder<InAppViewModel>.reactive(
       // onViewModelReady: (model) => model.onModelReady(),
       builder: (context, model, child) {
         // print(model.node?.lastSeen);
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Vision'),
+            title: const Text('Smartphone'),
             actions: [
               IconButton(
                 onPressed: () {
@@ -69,7 +69,7 @@ class HomeView extends StatelessWidget {
                 ),
         );
       },
-      viewModelBuilder: () => HomeViewModel(),
+      viewModelBuilder: () => InAppViewModel(),
     );
   }
 }
