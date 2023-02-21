@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_mlkit_image_labeling/google_mlkit_image_labeling.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:screenshot/screenshot.dart';
 
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -12,7 +15,6 @@ import 'package:vision/ui/setup_snackbar_ui.dart';
 import '../../../app/app.locator.dart';
 import '../../../app/app.logger.dart';
 // import '../../setup_snackbar_ui.dart';
-import 'package:screen_capture_event/screen_capture_event.dart';
 
 class HardwareViewModel extends BaseViewModel {
   final log = getLogger('HardwareViewModel');
@@ -44,11 +46,12 @@ class HardwareViewModel extends BaseViewModel {
   List<String> _labels = <String>[];
   List<String> get labels => _labels;
 
-  void getLabel() async {
+  void getLabel({String? path}) async {
     log.i("Getting label");
     _labels = <String>[];
 
-    final inputImage = InputImage.fromFilePath(_imageFile!.path);
+    final inputImage =
+        InputImage.fromFilePath(path != null ? path : _imageFile!.path);
     final ImageLabelerOptions options =
         ImageLabelerOptions(confidenceThreshold: 0.5);
     final imageLabeler = ImageLabeler(options: options);
@@ -104,8 +107,18 @@ class HardwareViewModel extends BaseViewModel {
   //   }));
   // }
 
-  @override
-  void dispose() {
-    super.dispose();
+  ScreenshotController screenshotController = ScreenshotController();
+
+  void takeScreenCapture() async {
+    await screenshotController
+        .capture(delay: const Duration(milliseconds: 10))
+        .then((Uint8List? image) async {
+      if (image != null) {
+        final directory = await getApplicationDocumentsDirectory();
+        final imagePath = await File('${directory.path}/image.png').create();
+        await imagePath.writeAsBytes(image);
+        getLabel(path: imagePath.path);
+      }
+    });
   }
 }
