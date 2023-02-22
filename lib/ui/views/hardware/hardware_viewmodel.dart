@@ -1,111 +1,50 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:google_mlkit_image_labeling/google_mlkit_image_labeling.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 
 import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart';
-import 'package:vision/ui/setup_snackbar_ui.dart';
+import 'package:vision/services/imageprocessing_service.dart';
 // import 'package:stacked_services/stacked_services.dart';
+import 'package:vision/services/tts_service.dart';
+// import 'package:vision/ui/setup_snackbar_ui.dart';
 
 import '../../../app/app.locator.dart';
 import '../../../app/app.logger.dart';
-// import '../../setup_snackbar_ui.dart';
 
 class HardwareViewModel extends BaseViewModel {
   final log = getLogger('HardwareViewModel');
 
-  final _snackBarService = locator<SnackbarService>();
+  // final _snackBarService = locator<SnackbarService>();
+  final TTSService _ttsService = locator<TTSService>();
+  final ImageProcessingService _imageProcessingService =
+      locator<ImageProcessingService>();
   // final _navigationService = locator<NavigationService>();
 
-  final ImagePicker _picker = ImagePicker();
-  XFile? _imageFile;
-  // XFile? get imageFile => _imageFile;
   File? _image;
   File? get imageSelected => _image;
-  InputImage? _inputImage;
-
-  getImageGallery() async {
-    setBusy(true);
-    // picking image
-    _imageFile = await _picker.pickImage(source: ImageSource.camera);
-
-    if (_imageFile != null) {
-      _image = File(_imageFile!.path);
-    } else {
-      _snackBarService.showCustomSnackBar(
-          message: "No images selected", variant: SnackbarType.error);
-    }
-    setBusy(false);
-  }
 
   List<String> _labels = <String>[];
   List<String> get labels => _labels;
 
-  void getLabel({String? path}) async {
+  void getLabel() async {
     log.i("Getting label");
     _labels = <String>[];
 
-    final inputImage =
-        InputImage.fromFilePath(path != null ? path : _imageFile!.path);
-    final ImageLabelerOptions options =
-        ImageLabelerOptions(confidenceThreshold: 0.5);
-    final imageLabeler = ImageLabeler(options: options);
-
-    final List<ImageLabel> labels = await imageLabeler.processImage(inputImage);
-
-    for (ImageLabel label in labels) {
-      final String text = label.label;
-      final int index = label.index;
-      final double confidence = label.confidence;
-      log.i("$index $text $confidence");
-      // if (confidence > 0.65) {
-      _labels.add(text);
-      // }
-    }
-
-    imageLabeler.close();
+    _labels = await _imageProcessingService.getTextFromImage(_image!);
 
     notifyListeners();
 
     for (String text in _labels) {
       log.i("SPEAK");
-      await speak(text);
+      await _ttsService.speak(text);
       await Future.delayed(const Duration(milliseconds: 1000));
     }
   }
-
-  FlutterTts flutterTts = FlutterTts();
-  // TtsState _ttsState = TtsState.stopped;
-  // TtsState get ttsState => _ttsState;
-
-  Future speak(String text) async {
-    var result = await flutterTts.speak(text);
-    if (result == 1) {
-      // _ttsState = TtsState.playing;
-      // notifyListeners();
-    }
-  }
-  //
-  // Future stop() async {
-  //   var result = await flutterTts.stop();
-  //   if (result == 1) {
-  //     _ttsState = TtsState.stopped;
-  //     notifyListeners();
-  //   }
-  // }
-
-  // _loadImage(File file) async {
-  //   final data = await file.readAsBytes();
-  //   await decodeImageFromList(data).then((value) => setState(() {
-  //     _image = value;
-  //     isLoading = false;
-  //   }));
-  // }
 
   ScreenshotController screenshotController = ScreenshotController();
 
@@ -115,10 +54,28 @@ class HardwareViewModel extends BaseViewModel {
         .then((Uint8List? image) async {
       if (image != null) {
         final directory = await getApplicationDocumentsDirectory();
-        final imagePath = await File('${directory.path}/image.png').create();
-        await imagePath.writeAsBytes(image);
-        getLabel(path: imagePath.path);
+        _image = await File('${directory.path}/image.png').create();
+        await _image!.writeAsBytes(image);
+        notifyListeners();
       }
     });
+  }
+
+  late InAppWebViewController webView;
+  Uint8List? screenshotBytes;
+  final _authority = "google.com";
+  final _path = "/api";
+  Uri? uri = Uri.https(
+    "google.com",
+  );
+
+  void takeScreenshot() async {
+    final image = await webView.takeScreenshot();
+    if (image != null) {
+      final directory = await getApplicationDocumentsDirectory();
+      _image = await File('${directory.path}/image.png').create();
+      await _image!.writeAsBytes(image);
+      notifyListeners();
+    }
   }
 }
