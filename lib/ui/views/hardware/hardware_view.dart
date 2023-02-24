@@ -19,13 +19,15 @@ class HardwareView extends StatelessWidget {
           appBar: AppBar(
             title: const Text('Hardware'),
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              model.takeScreenshot();
-            },
-            tooltip: 'camera',
-            child: Icon(Icons.screenshot),
-          ),
+          floatingActionButton: model.imageSelected == null
+              ? FloatingActionButton(
+                  onPressed: () {
+                    model.takeScreenshot();
+                  },
+                  tooltip: 'camera',
+                  child: Icon(Icons.screenshot),
+                )
+              : null,
           body: model.imageSelected == null
               ? Container(
                   child: Column(children: <Widget>[
@@ -57,8 +59,15 @@ class HardwareView extends StatelessWidget {
                   ))
                 ]))
               : Column(
+                  // mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Expanded(child: Image.file(model.imageSelected!)),
+                    Expanded(
+                      child: Image.file(
+                        key: ValueKey(model.count),
+                        model.imageSelected!,
+                      ),
+                    ),
                     if (model.labels.isNotEmpty)
                       Padding(
                         padding: const EdgeInsets.all(8.0),

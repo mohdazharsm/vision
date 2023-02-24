@@ -49,33 +49,40 @@ class HardwareViewModel extends BaseViewModel {
   ScreenshotController screenshotController = ScreenshotController();
 
   void takeScreenCapture() async {
+    _image = null;
     await screenshotController
         .capture(delay: const Duration(milliseconds: 10))
         .then((Uint8List? image) async {
       if (image != null) {
         final directory = await getApplicationDocumentsDirectory();
-        _image = await File('${directory.path}/image.png').create();
+        _image = await File('${directory.path}/image$_count.png').create();
         await _image!.writeAsBytes(image);
-        notifyListeners();
       }
     });
+    notifyListeners();
   }
 
   late InAppWebViewController webView;
   Uint8List? screenshotBytes;
   final _authority = "google.com";
   final _path = "/api";
-  Uri? uri = Uri.https(
-    "google.com",
+  Uri? uri = Uri.http(
+    "192.168.83.87",
   );
 
+  int _count = 0;
+  int get count => _count;
+
   void takeScreenshot() async {
+    _count++;
+    _image = null;
     final image = await webView.takeScreenshot();
     if (image != null) {
       final directory = await getApplicationDocumentsDirectory();
       _image = await File('${directory.path}/image.png').create();
       await _image!.writeAsBytes(image);
-      notifyListeners();
     }
+    await Future.delayed(const Duration(milliseconds: 500));
+    notifyListeners();
   }
 }
