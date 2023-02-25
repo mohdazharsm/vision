@@ -27,10 +27,24 @@ class InAppViewModel extends BaseViewModel {
   File? get imageSelected => _image;
   InputImage? _inputImage;
 
-  getImageGallery() async {
+  getImageCamera() async {
     setBusy(true);
     // picking image
     _imageFile = await _picker.pickImage(source: ImageSource.camera);
+
+    if (_imageFile != null) {
+      _image = File(_imageFile!.path);
+    } else {
+      _snackBarService.showCustomSnackBar(
+          message: "No images selected", variant: SnackbarType.error);
+    }
+    setBusy(false);
+  }
+
+  getImageGallery() async {
+    setBusy(true);
+    // picking image
+    _imageFile = await _picker.pickImage(source: ImageSource.gallery);
 
     if (_imageFile != null) {
       _image = File(_imageFile!.path);

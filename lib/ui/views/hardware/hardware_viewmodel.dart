@@ -49,6 +49,8 @@ class HardwareViewModel extends BaseViewModel {
   ScreenshotController screenshotController = ScreenshotController();
 
   void takeScreenCapture() async {
+    _labels = <String>[];
+    notifyListeners();
     _image = null;
     await screenshotController
         .capture(delay: const Duration(milliseconds: 10))
@@ -73,7 +75,7 @@ class HardwareViewModel extends BaseViewModel {
   int _count = 0;
   int get count => _count;
 
-  void takeScreenshot() async {
+  Future<void> takeScreenshot() async {
     _count++;
     _image = null;
     final image = await webView.takeScreenshot();

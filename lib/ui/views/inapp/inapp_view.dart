@@ -25,12 +25,27 @@ class InAppView extends StatelessWidget {
               ),
             ],
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              model.getImageGallery();
-            },
-            tooltip: 'camera',
-            child: Icon(Icons.add_a_photo),
+          floatingActionButton: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              FloatingActionButton(
+                onPressed: () {
+                  model.getImageCamera();
+                },
+                tooltip: 'camera',
+                child: Icon(Icons.add_a_photo),
+                heroTag: null,
+              ),
+              SizedBox(width: 10),
+              FloatingActionButton(
+                onPressed: () {
+                  model.getImageGallery();
+                },
+                tooltip: 'camera',
+                child: Icon(Icons.image),
+                heroTag: null,
+              )
+            ],
           ),
           body: model.isBusy
               ? Center(child: CircularProgressIndicator())
