@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:stacked/stacked.dart';
+import 'package:vision/ui/views/hardware/test.dart';
 
 import 'hardware_viewmodel.dart';
 
@@ -16,6 +17,15 @@ class HardwareView extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: const Text('Hardware'),
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    model.isHotspot();
+                    // Navigator.of(context)
+                    // .push(MaterialPageRoute(builder: (context) => MyApp()));
+                  },
+                  icon: Icon(Icons.speaker))
+            ],
           ),
           // floatingActionButton: FloatingActionButton(
           //   onPressed: () {

@@ -6,6 +6,7 @@ import 'package:google_mlkit_image_labeling/google_mlkit_image_labeling.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:wifi_iot/wifi_iot.dart';
 
 import 'package:stacked/stacked.dart';
 import 'package:vision/services/imageprocessing_service.dart';
@@ -15,6 +16,13 @@ import 'package:vision/services/tts_service.dart';
 
 import '../../../app/app.locator.dart';
 import '../../../app/app.logger.dart';
+
+//main.dart
+import "dart:async";
+
+import 'package:http/http.dart' as http;
+import 'package:html/parser.dart' as parser;
+import 'package:html/dom.dart' as dom;
 
 class HardwareViewModel extends BaseViewModel {
   final log = getLogger('HardwareViewModel');
@@ -68,8 +76,8 @@ class HardwareViewModel extends BaseViewModel {
   Uint8List? screenshotBytes;
   final _authority = "google.com";
   final _path = "/api";
-  Uri? uri = Uri.http(
-    "192.168.83.87",
+  Uri uri = Uri.http(
+    "192.168.110.87",
   );
 
   int _count = 0;
@@ -86,5 +94,27 @@ class HardwareViewModel extends BaseViewModel {
     }
     await Future.delayed(const Duration(milliseconds: 500));
     notifyListeners();
+  }
+
+  void addDataToStream() {
+    log.i("Add data");
+    http.get(uri).then((response) {
+      log.i(response);
+      dom.Document document = parser.parse(response.body);
+      final e = document.querySelectorAll('.img_list .thumb');
+      List<String?> url = e.map((element) {
+        return element.getElementsByTagName('img')[0].attributes['src'];
+      }).toList();
+      // bloc.urlIn.add(url);
+      log.i(url);
+    });
+  }
+
+  void isHotspot() {
+    WiFiForIoTPlugin.isWiFiAPEnabled().then((val) {
+      log.i(val ? "Hotspot eabled" : "No hostpot");
+    }).catchError((val) {
+      log.e("error");
+    });
   }
 }
