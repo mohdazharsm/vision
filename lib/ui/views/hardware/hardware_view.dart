@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:stacked/stacked.dart';
-import 'package:vision/ui/views/hardware/test.dart';
 
 import 'hardware_viewmodel.dart';
 
@@ -11,80 +9,74 @@ class HardwareView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<HardwareViewModel>.reactive(
-      // onViewModelReady: (model) => model.onModelReady(),
+      onViewModelReady: (model) => model.onModelReady(),
       builder: (context, model, child) {
         // print(model.node?.lastSeen);
         return Scaffold(
           appBar: AppBar(
             title: const Text('Hardware'),
             actions: [
-              IconButton(
-                  onPressed: () {
-                    model.isHotspot();
-                    // Navigator.of(context)
-                    // .push(MaterialPageRoute(builder: (context) => MyApp()));
-                  },
-                  icon: Icon(Icons.speaker))
+              // IconButton(
+              //     onPressed: () {
+              //       // Navigator.of(context)
+              //       // .push(MaterialPageRoute(builder: (context) => MyApp()));
+              //     },
+              //     icon: Icon(Icons.speaker),
+              // ),
+
+              if (model.isHotspot && model.ip != null)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(Icons.developer_board, color: Colors.amber),
+                ),
             ],
           ),
-          // floatingActionButton: FloatingActionButton(
-          //   onPressed: () {
-          //   },
-          //   tooltip: 'camera',
-          //   child: Icon(Icons.screenshot),
-          // ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              model.work();
+            },
+            tooltip: 'camera',
+            child: Icon(Icons.camera_alt),
+          ),
           body: Container(
-              child: Column(children: <Widget>[
-            Expanded(
-                child: RotatedBox(
-              quarterTurns: 1,
-              child: InAppWebView(
-                initialUrlRequest: URLRequest(url: model.uri),
-                // initialUrl: "https://github.com/flutter",
-                // initialHeaders: {},
-                initialOptions: InAppWebViewGroupOptions(
-                    // crossPlatform: InAppWebViewOptions(debuggingEnabled: true),
+              child: Center(
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  if (model.isBusy) CircularProgressIndicator(),
+                  if (model.imageSelected != null &&
+                      model.imageSelected!.path != "")
+                    Expanded(
+                      child: RotatedBox(
+                        quarterTurns: 1,
+                        child: Image.memory(model.img!
+                            // model.imageSelected!.readAsBytesSync(),
+                            ),
+                      ),
                     ),
-                onWebViewCreated: (InAppWebViewController controller) {
-                  model.webView = controller;
-                },
-                onLoadStart: (InAppWebViewController controller, Uri? url) {},
-                onLoadStop:
-                    (InAppWebViewController controller, Uri? url) async {
-                  // model.screenshotBytes = await controller.takeScreenshot();
-                  // showDialog(
-                  //   context: context,
-                  //   builder: (context) {
-                  //     return AlertDialog(
-                  //       content: Image.memory(model.screenshotBytes!),
-                  //     );
+                  if (model.labels.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.all(14.0),
+                      child: Text(
+                        model.labels.toString(),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  // TextButton(
+                  //   onPressed: () async {
+                  //     await model.getImageFromHardware();
+                  //     model.getLabel();
+                  //     print("get label");
                   //   },
-                  // );
-                },
-              ),
-            )),
-            if (model.labels.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  model.labels.toString(),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            TextButton(
-              onPressed: () async {
-                await model.takeScreenshot();
-                model.getLabel();
-                print("get label");
-              },
-              child: Text(
-                "Get label",
-              ),
-            ),
-          ])),
+                  //   child: Text(
+                  //     "Get label",
+                  //   ),
+                  // ),
+                ]),
+          )),
         );
       },
       viewModelBuilder: () => HardwareViewModel(),

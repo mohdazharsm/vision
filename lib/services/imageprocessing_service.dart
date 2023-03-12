@@ -32,4 +32,33 @@ class ImageProcessingService {
 
     return _labels;
   }
+
+  List<String> _personLabels = [
+    'Smile',
+    'Fun',
+    'Mouth',
+    'Selfie',
+    'Eyelash',
+    'Beard',
+    'Hand',
+    'Moustache',
+    'Skin',
+    'Cool',
+    'Ear',
+    'Hair',
+    'Dude',
+  ];
+
+  String processLabels(List<String> labeles) {
+    if (labeles.isEmpty) return "Not recognized";
+    check(String value) => labeles.contains(value);
+    bool res = _personLabels.any(check); // returns true
+    if (res) {
+      return "Person detected";
+    } else {
+      if (labeles.contains("Dog")) labeles.remove("Dog");
+      String text = labeles.first;
+      return text;
+    }
+  }
 }
