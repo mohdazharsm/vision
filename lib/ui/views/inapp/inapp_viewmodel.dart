@@ -10,6 +10,7 @@ import 'package:vision/ui/setup_snackbar_ui.dart';
 
 import '../../../app/app.locator.dart';
 import '../../../app/app.logger.dart';
+import '../../../services/dlib_service.dart';
 import '../../../services/imageprocessing_service.dart';
 
 class InAppViewModel extends BaseViewModel {
@@ -20,6 +21,7 @@ class InAppViewModel extends BaseViewModel {
   final TTSService _ttsService = locator<TTSService>();
   final ImageProcessingService _imageProcessingService =
       locator<ImageProcessingService>();
+  final DlibService _dlibService = locator<DlibService>();
 
   final ImagePicker _picker = ImagePicker();
   XFile? _imageFile;
@@ -33,6 +35,8 @@ class InAppViewModel extends BaseViewModel {
     _imageFile = await _picker.pickImage(source: ImageSource.camera);
 
     if (_imageFile != null) {
+      log.i("CCC");
+      _dlibService.addImageFace(await _imageFile!.readAsBytes());
       _image = File(_imageFile!.path);
     } else {
       _snackBarService.showCustomSnackBar(

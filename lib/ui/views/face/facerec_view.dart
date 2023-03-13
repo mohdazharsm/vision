@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-import 'hardware_viewmodel.dart';
+import 'facerec_viewmodel.dart';
 
-class HardwareView extends StatelessWidget {
-  const HardwareView({Key? key}) : super(key: key);
+class FaceRecView extends StatelessWidget {
+  const FaceRecView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<HardwareViewModel>.reactive(
+    return ViewModelBuilder<FaceRecViewModel>.reactive(
       onViewModelReady: (model) => model.onModelReady(),
       builder: (context, model, child) {
         // print(model.node?.lastSeen);
@@ -81,7 +81,7 @@ class HardwareView extends StatelessWidget {
           )),
         );
       },
-      viewModelBuilder: () => HardwareViewModel(),
+      viewModelBuilder: () => FaceRecViewModel(),
     );
   }
 }

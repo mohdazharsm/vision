@@ -1,6 +1,9 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:vision/ui/views/face/tester/test.dart';
 
 import 'app/app.locator.dart';
 import 'app/app.router.dart';
@@ -14,6 +17,22 @@ void main() async {
   );
   setupLocator(); // stacked architecture
   setupSnackbarUi();
+
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
+  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+
+  cameras = await availableCameras();
+  for (int i = 0; i < cameras.length; i++) {
+    print('AVAILABLE CAMERAS: $i  '
+        'name: ${cameras[i].name}   '
+        'lensDirection: ${cameras[i].lensDirection}   '
+        'sensorOrientation: ${cameras[i].sensorOrientation}');
+  }
+
   runApp(const MyApp());
 }
 

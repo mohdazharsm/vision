@@ -18,4 +18,12 @@ class HomeViewModel extends BaseViewModel {
   void openHardwareView() {
     _navigationService.navigateTo(Routes.hardwareView);
   }
+
+  void openFaceTrainView() {
+    _navigationService.navigateTo(Routes.faceRecView);
+  }
+
+  void openFaceTestView() {
+    _navigationService.navigateTo(Routes.faceTest);
+  }
 }

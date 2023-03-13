@@ -11,6 +11,7 @@ import 'package:stacked_services/src/dialog/dialog_service.dart';
 import 'package:stacked_services/src/navigation/navigation_service.dart';
 import 'package:stacked_services/src/snackbar/snackbar_service.dart';
 
+import '../services/dlib_service.dart';
 import '../services/imageprocessing_service.dart';
 import '../services/tts_service.dart';
 
@@ -28,4 +29,5 @@ Future<void> setupLocator(
   locator.registerLazySingleton(() => SnackbarService());
   locator.registerLazySingleton(() => TTSService());
   locator.registerLazySingleton(() => ImageProcessingService());
+  locator.registerLazySingleton(() => DlibService());
 }

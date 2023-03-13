@@ -27,11 +27,19 @@ class HomeView extends StatelessWidget {
                       Option(
                           name: 'In App',
                           onTap: model.openInAppView,
-                          file: 'assets/inapp.json'),
+                          file: 'assets/lottie/inapp.json'),
                       Option(
                           name: 'Hardware',
                           onTap: model.openHardwareView,
-                          file: 'assets/hardware.json'),
+                          file: 'assets/lottie/hardware.json'),
+                      Option(
+                          name: 'Face Train',
+                          onTap: model.openFaceTrainView,
+                          file: 'assets/lottie/face.json'),
+                      Option(
+                          name: 'FaceTest',
+                          onTap: model.openFaceTestView,
+                          file: 'assets/lottie/face.json'),
                     ],
                   ),
                 ),
