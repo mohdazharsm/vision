@@ -41,7 +41,7 @@ class InAppView extends StatelessWidget {
                 onPressed: () {
                   model.getImageGallery();
                 },
-                tooltip: 'camera',
+                tooltip: 'gallery',
                 child: Icon(Icons.image),
                 heroTag: null,
               )

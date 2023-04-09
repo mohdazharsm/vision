@@ -1,5 +1,6 @@
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:vision/services/regula_service.dart';
 
 import '../../../app/app.locator.dart';
 import '../../../app/app.logger.dart';
@@ -9,12 +10,12 @@ class StartupViewModel extends BaseViewModel {
   final log = getLogger('StartUpViewModel');
 
   final _navigationService = locator<NavigationService>();
+  final _ragulaService = locator<RegulaService>();
   // final _dbService = locator<DbService>();
 
   void handleStartupLogic() async {
     log.i('Startup');
-    // _dbService.setupNodeListening();
-    // _dbService.setupAlertListening();
+    _ragulaService.initPlatformState();
     // _baseService.setCurrentRoute(Routes.startUpView);
     await Future.delayed(const Duration(milliseconds: 800));
     // if (isUserLoggedIn) {

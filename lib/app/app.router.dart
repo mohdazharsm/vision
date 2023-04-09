@@ -7,9 +7,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i8;
+import 'package:stacked_services/stacked_services.dart' as _i7;
 import 'package:vision/ui/views/face/facerec_view.dart' as _i6;
-import 'package:vision/ui/views/face/tester/test.dart' as _i7;
 import 'package:vision/ui/views/hardware/hardware_view.dart' as _i5;
 import 'package:vision/ui/views/home/home_view.dart' as _i3;
 import 'package:vision/ui/views/inapp/inapp_view.dart' as _i4;
@@ -26,15 +25,12 @@ class Routes {
 
   static const faceRecView = '/face_train';
 
-  static const faceTest = '/face_test';
-
   static const all = <String>{
     startupView,
     homeView,
     inAppView,
     hardwareView,
     faceRecView,
-    faceTest,
   };
 }
 
@@ -59,10 +55,6 @@ class StackedRouter extends _i1.RouterBase {
     _i1.RouteDef(
       Routes.faceRecView,
       page: _i6.FaceRecView,
-    ),
-    _i1.RouteDef(
-      Routes.faceTest,
-      page: _i7.FaceTest,
     ),
   ];
 
@@ -97,12 +89,6 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i7.FaceTest: (data) {
-      return MaterialPageRoute<dynamic>(
-        builder: (context) => const _i7.FaceTest(),
-        settings: data,
-      );
-    },
   };
 
   @override
@@ -111,7 +97,7 @@ class StackedRouter extends _i1.RouterBase {
   Map<Type, _i1.StackedRouteFactory> get pagesMap => _pagesMap;
 }
 
-extension NavigatorStateExtension on _i8.NavigationService {
+extension NavigatorStateExtension on _i7.NavigationService {
   Future<dynamic> navigateToStartupView([
     int? routerId,
     bool preventDuplicates = true,
@@ -182,20 +168,6 @@ extension NavigatorStateExtension on _i8.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> navigateToFaceTest([
-    int? routerId,
-    bool preventDuplicates = true,
-    Map<String, String>? parameters,
-    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
-  ]) async {
-    return navigateTo<dynamic>(Routes.faceTest,
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
-  }
-
   Future<dynamic> replaceWithStartupView([
     int? routerId,
     bool preventDuplicates = true,
@@ -260,20 +232,6 @@ extension NavigatorStateExtension on _i8.NavigationService {
         transition,
   ]) async {
     return replaceWith<dynamic>(Routes.faceRecView,
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
-  }
-
-  Future<dynamic> replaceWithFaceTest([
-    int? routerId,
-    bool preventDuplicates = true,
-    Map<String, String>? parameters,
-    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
-  ]) async {
-    return replaceWith<dynamic>(Routes.faceTest,
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

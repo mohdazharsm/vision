@@ -1,10 +1,9 @@
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'package:vision/services/dlib_service.dart';
 import 'package:vision/services/imageprocessing_service.dart';
+import 'package:vision/services/regula_service.dart';
 import 'package:vision/services/tts_service.dart';
 import 'package:vision/ui/views/face/facerec_view.dart';
-import 'package:vision/ui/views/face/tester/test.dart';
 import 'package:vision/ui/views/hardware/hardware_view.dart';
 import 'package:vision/ui/views/inapp/inapp_view.dart';
 
@@ -18,7 +17,6 @@ import '../ui/views/startup/startup_view.dart';
     MaterialRoute(page: InAppView, path: '/in_app'),
     MaterialRoute(page: HardwareView, path: '/hardware'),
     MaterialRoute(page: FaceRecView, path: '/face_train'),
-    MaterialRoute(page: FaceTest, path: '/face_test'),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),
@@ -26,7 +24,7 @@ import '../ui/views/startup/startup_view.dart';
     LazySingleton(classType: SnackbarService),
     LazySingleton(classType: TTSService),
     LazySingleton(classType: ImageProcessingService),
-    LazySingleton(classType: DlibService),
+    LazySingleton(classType: RegulaService),
   ],
   logger: StackedLogger(),
 )

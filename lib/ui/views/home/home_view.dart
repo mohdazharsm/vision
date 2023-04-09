@@ -36,10 +36,10 @@ class HomeView extends StatelessWidget {
                           name: 'Face Train',
                           onTap: model.openFaceTrainView,
                           file: 'assets/lottie/face.json'),
-                      Option(
-                          name: 'FaceTest',
-                          onTap: model.openFaceTestView,
-                          file: 'assets/lottie/face.json'),
+                      // Option(
+                      //     name: 'FaceTest',
+                      //     onTap: model.openFaceTestView,
+                      //     file: 'assets/lottie/face.json'),
                     ],
                   ),
                 ),

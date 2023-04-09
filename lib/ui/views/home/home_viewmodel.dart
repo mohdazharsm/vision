@@ -24,6 +24,6 @@ class HomeViewModel extends BaseViewModel {
   }
 
   void openFaceTestView() {
-    _navigationService.navigateTo(Routes.faceTest);
+    // _navigationService.navigateTo(Routes.faceTest);
   }
 }
