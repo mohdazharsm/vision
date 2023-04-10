@@ -75,7 +75,7 @@ class RegulaService {
     final image = Regula.MatchFacesImage();
     image.bitmap = base64Encode(file);
     image.imageType = Regula.ImageType.LIVE;
-    image.identifier = path.split('/').last.split('.').last;
+    image.identifier = path.split('/').last.split('.').first;
     log.i("Image set:  $path type: ${image.imageType}");
     return image;
   }
@@ -97,11 +97,21 @@ class RegulaService {
   }
 
   // final _image2 = Regula.MatchFacesImage();
-
-  Future<double?> checkMatch(String path) async {
+  Future<String?> checkMatch(String path) async {
     Regula.MatchFacesImage _image1 = getMatchFaceImage(path);
     List<Regula.MatchFacesImage> rImages = await getImagesStored();
+    for (final i in rImages) {
+      double? value = await _checkMatch(_image1, i);
+      if (value != null) {
+        log.i(value);
+        return i.identifier!;
+      }
+    }
+    return null;
+  }
 
+  Future<double?> _checkMatch(
+      Regula.MatchFacesImage _image1, Regula.MatchFacesImage _image2) async {
     if (_image1.bitmap != null && _image1.bitmap != "") {
       log.i("Image 1 ready");
     } else {
@@ -109,11 +119,11 @@ class RegulaService {
           message: "Image edit", variant: SnackbarType.error);
       return null;
     }
-    if (rImages.isNotEmpty) {
-      log.i("Images stored ready");
+    if (_image2.bitmap != null && _image2.bitmap != "") {
+      log.i("Image 2 ready");
     } else {
       _snackbarService.showCustomSnackBar(
-          message: "No images trained", variant: SnackbarType.error);
+          message: "Image edit", variant: SnackbarType.error);
       return null;
     }
 
@@ -121,13 +131,14 @@ class RegulaService {
     // rImages.add(_image1);
 
     var request = Regula.MatchFacesRequest();
-    request.images = rImages;
-    log.i("request images: ${request.images.length} ${request.thumbnails}");
+    request.images = [_image1, _image2];
+    // log.i("request images: ${request.images.length}");
     String value = await Regula.FaceSDK.matchFaces(jsonEncode(request));
     if (value.contains("errorCode"))
       _snackbarService.showCustomSnackBar(
-          message: "Error api call", variant: SnackbarType.error);
-    log.i("Value> $value");
+          message: "Error api call/Not detected face",
+          variant: SnackbarType.error);
+    // log.i("Value> $value");
     Regula.MatchFacesResponse? response =
         Regula.MatchFacesResponse.fromJson(json.decode(value));
     String str = await Regula.FaceSDK.matchFacesSimilarityThresholdSplit(
@@ -135,12 +146,14 @@ class RegulaService {
 
     Regula.MatchFacesSimilarityThresholdSplit? split =
         Regula.MatchFacesSimilarityThresholdSplit.fromJson(json.decode(str));
+
     if (split!.matchedFaces.isNotEmpty) {
       log.i("MatchedFaces: ${split.matchedFaces}");
       log.i(
           "Matched face index: ${split.matchedFaces[0]!.first!.face!.faceIndex}");
       return (split.matchedFaces[0]!.similarity! * 100);
     }
+    log.i('Not identified');
 
     return null;
   }

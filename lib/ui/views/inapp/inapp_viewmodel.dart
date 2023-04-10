@@ -73,14 +73,26 @@ class InAppViewModel extends BaseViewModel {
     String text = _imageProcessingService.processLabels(_labels);
     log.i("SPEAK");
     await _ttsService.speak(text);
-    // return Future.delayed(const Duration(milliseconds: 1000));
-    if (text == "Person detected") processFace();
+    await Future.delayed(const Duration(milliseconds: 2000));
+    if (text == "Person detected") return processFace();
   }
 
   void processFace() async {
     _ttsService.speak("Identifying person");
-    double? v = await _ragulaService.checkMatch(_imageFile!.path);
-    log.i(v);
+    setBusy(true);
+    String? person = await _ragulaService.checkMatch(_imageFile!.path);
+    setBusy(false);
+    if (person != null) {
+      _labels.clear();
+      _labels.add(person);
+      notifyListeners();
+      await _ttsService.speak(person);
+      await Future.delayed(const Duration(milliseconds: 1500));
+    } else {
+      await _ttsService.speak("Not identified!");
+      await Future.delayed(const Duration(milliseconds: 1500));
+    }
+    log.i("Person: $person");
   }
 
   Future speak(String text) async {

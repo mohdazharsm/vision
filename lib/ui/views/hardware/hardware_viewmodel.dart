@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:vision/services/regula_service.dart';
 import 'package:vision/ui/setup_snackbar_ui.dart';
 import 'package:wifi_iot/wifi_iot.dart';
 
@@ -29,6 +30,7 @@ class HardwareViewModel extends BaseViewModel {
   final ImageProcessingService _imageProcessingService =
       locator<ImageProcessingService>();
   // final _navigationService = locator<NavigationService>();
+  final _ragulaService = locator<RegulaService>();
 
   File? _image;
   File? get imageSelected => _image;
@@ -73,7 +75,26 @@ class HardwareViewModel extends BaseViewModel {
     String text = _imageProcessingService.processLabels(_labels);
     log.i("SPEAK");
     await _ttsService.speak(text);
-    return Future.delayed(const Duration(milliseconds: 1000));
+    await Future.delayed(const Duration(milliseconds: 2000));
+    if (text == "Person detected") return processFace();
+  }
+
+  void processFace() async {
+    _ttsService.speak("Identifying person");
+    setBusy(true);
+    String? person = await _ragulaService.checkMatch(_image!.path);
+    setBusy(false);
+    if (person != null) {
+      _labels.clear();
+      _labels.add(person);
+      notifyListeners();
+      await _ttsService.speak(person);
+      await Future.delayed(const Duration(milliseconds: 1500));
+    } else {
+      await _ttsService.speak("Not identified!");
+      await Future.delayed(const Duration(milliseconds: 1500));
+    }
+    log.i("Person: $person");
   }
 
   Uint8List? _img;
