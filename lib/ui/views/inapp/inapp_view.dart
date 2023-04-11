@@ -67,15 +67,22 @@ class InAppView extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                TextButton(
-                                  onPressed: () {
-                                    model.getLabel();
-                                    print("get label");
-                                  },
-                                  child: Text(
-                                    "Get label",
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: IconButton(
+                                    icon: Icon(Icons.volume_down_outlined),
+                                    onPressed: model.getLabel,
                                   ),
                                 ),
+                                // TextButton(
+                                //   onPressed: () {
+                                //     model.getLabel();
+                                //     print("get label");
+                                //   },
+                                //   child: Text(
+                                //     "Get label",
+                                //   ),
+                                // ),
                               ],
                             )
                           : Text("No images selected!")
