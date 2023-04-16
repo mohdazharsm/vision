@@ -13,6 +13,8 @@ import '../../../app/app.locator.dart';
 import '../../../app/app.logger.dart';
 import '../../../services/imageprocessing_service.dart';
 
+import 'package:perfect_volume_control/perfect_volume_control.dart';
+
 class InAppViewModel extends BaseViewModel {
   final log = getLogger('InAppViewModel');
 
@@ -23,11 +25,28 @@ class InAppViewModel extends BaseViewModel {
       locator<ImageProcessingService>();
   final _ragulaService = locator<RegulaService>();
 
+  late StreamSubscription<double> _subscription;
+  void onModelReady() {
+    _subscription = PerfectVolumeControl.stream.listen((value) {
+      if (_image != null && !isBusy) {
+        log.i("Volume button got!");
+        getLabel();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    // call your function here
+    _subscription.cancel();
+    super.dispose();
+  }
+
   final ImagePicker _picker = ImagePicker();
   XFile? _imageFile;
   File? _image;
   File? get imageSelected => _image;
-  InputImage? _inputImage;
+  // InputImage? _inputImage;
 
   getImageCamera() async {
     setBusy(true);
@@ -63,12 +82,13 @@ class InAppViewModel extends BaseViewModel {
   List<String> get labels => _labels;
 
   void getLabel() async {
+    setBusy(true);
     log.i("Getting label");
     _labels = <String>[];
 
     _labels = await _imageProcessingService.getTextFromImage(_image!);
 
-    notifyListeners();
+    setBusy(false);
 
     String text = _imageProcessingService.processLabels(_labels);
     log.i("SPEAK");
@@ -97,10 +117,5 @@ class InAppViewModel extends BaseViewModel {
 
   Future speak(String text) async {
     _ttsService.speak(text);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 }

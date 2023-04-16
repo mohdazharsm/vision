@@ -9,7 +9,7 @@ class InAppView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<InAppViewModel>.reactive(
-      // onViewModelReady: (model) => model.onModelReady(),
+      onViewModelReady: (model) => model.onModelReady(),
       builder: (context, model, child) {
         // print(model.node?.lastSeen);
         return Scaffold(

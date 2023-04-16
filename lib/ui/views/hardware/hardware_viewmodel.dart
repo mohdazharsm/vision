@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:perfect_volume_control/perfect_volume_control.dart';
 import 'package:vision/services/regula_service.dart';
 import 'package:vision/ui/setup_snackbar_ui.dart';
 import 'package:wifi_iot/wifi_iot.dart';
@@ -16,11 +17,11 @@ import '../../../app/app.locator.dart';
 import '../../../app/app.logger.dart';
 
 //main.dart
-import "dart:async";
+// import "dart:async";
 
 import 'package:http/http.dart' as http;
-import 'package:html/parser.dart' as parser;
-import 'package:html/dom.dart' as dom;
+// import 'package:html/parser.dart' as parser;
+// import 'package:html/dom.dart' as dom;
 
 class HardwareViewModel extends BaseViewModel {
   final log = getLogger('HardwareViewModel');
@@ -55,12 +56,25 @@ class HardwareViewModel extends BaseViewModel {
       _ip = "192.168.149.87";
       setBusy(false);
     }
+    _subscription = PerfectVolumeControl.stream.listen((value) {
+      if (_image != null && !isBusy) {
+        log.i("Volume button got!");
+        work();
+      }
+    });
+  }
+
+  late StreamSubscription<double> _subscription;
+  @override
+  void dispose() {
+    // call your function here
+    _subscription.cancel();
+    super.dispose();
   }
 
   void work() async {
     setBusy(true);
     await getImageFromHardware();
-    setBusy(false);
     await getLabel();
   }
 
@@ -70,7 +84,7 @@ class HardwareViewModel extends BaseViewModel {
 
     _labels = await _imageProcessingService.getTextFromImage(_image!);
 
-    notifyListeners();
+    setBusy(false);
 
     String text = _imageProcessingService.processLabels(_labels);
     log.i("SPEAK");

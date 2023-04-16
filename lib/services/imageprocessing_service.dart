@@ -57,6 +57,8 @@ class ImageProcessingService {
       return "Person detected";
     } else {
       if (labeles.contains("Dog")) labeles.remove("Dog");
+      if (labeles.contains("Musical instrument"))
+        labeles.remove("Musical instrument");
       String text = labeles.first;
       return text;
     }
